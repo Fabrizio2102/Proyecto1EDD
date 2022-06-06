@@ -24,6 +24,32 @@ public class ListaStock {
         return first == null;
     }
     
+    public NodoStock devolverNodo(int ans){
+        if(ans != 1){
+            NodoStock aux = first;
+            for (int i = 0; i < ans; i++) {
+                aux = aux.getSiguiente();
+            }
+            return aux;
+        }else{
+            return first;
+        }
+    }
+    
+    public void imprimir(){
+        if(isVacio()){
+            System.out.println("La lista está vacía");
+        }else{
+            NodoStock aux = first;
+            System.out.print("\n");
+            for(int i = 0; i < size; i++){
+                System.out.println((i+1) + ". " + aux.getElement() + ": " + aux.getCantidad());
+                aux = aux.getSiguiente();
+            }
+            System.out.print("\n");
+        }
+    }
+    
     public void insertarFinal(Object dato, int cantidad){
         NodoStock nuevo = new NodoStock(dato, cantidad);
         

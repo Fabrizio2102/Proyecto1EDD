@@ -32,17 +32,32 @@ public class Grafo {
         matrizAdy[i][j] = 0;
     }
     
-    public void insertarVertice(int n){
-        if(n > maxNodos - numVertices){
-            System.out.println("Error. Se supera el número de almacenes máximos");
-        }else{
-            for (int i = 0; i < numVertices + n; i++) {
-                for (int j = numVertices; j < numVertices + n; j++) {
-                    matrizAdy[i][j] = matrizAdy[j][i] = 0;
+    public boolean isFull(){
+        return numVertices == maxNodos;
+    }
+    
+    public void imprimirGrafo(){
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                System.out.print(matrizAdy[i][j] + "  ");
+                if(j == numVertices-1){
+                    System.out.println("");
                 }
             }
         }
-        numVertices = numVertices + n;
+    }
+    
+    public void insertarVertice(){
+        if(isFull()){
+            System.out.println("Error. Se alcanzó el número de almacenes máximos");
+        }else{
+            for (int i = 0; i < numVertices + 1; i++) {
+                for (int j = numVertices; j < numVertices + 1; j++) {
+                    matrizAdy[i][j] = matrizAdy[j][i] = 0;
+                }
+            }
+            numVertices++;
+        }
     }
 
     /**

@@ -15,7 +15,82 @@ import javax.swing.JOptionPane;
  */
 public class Panel extends javax.swing.JFrame {
     ListaAlmacen almacen = new ListaAlmacen();
-    Grafo grafin = new Grafo();
+    Grafo grafito = new Grafo(this.iniciar());
+    
+    public int iniciar(){
+        int validar = 0;
+        int max = 0;
+        while(validar == 0){
+            try{
+                max = Integer.parseInt(JOptionPane.showInputDialog(null, "Número máximo de almacenes que desea en el grafo: "));
+                validar = 1;
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null,"Pongase serio y pon un número válido");
+        }
+        }
+        return max;
+    }
+    
+    public void insertarCaminos(boolean in, boolean out, int vertice){
+        int x = 1;
+        if(in && out){
+            x = 2;
+        }
+        int ola = 0;
+        if(in){
+            while(ola != 7){
+                String aux = JOptionPane.showInputDialog(null, "Inserta el almacén (solo la letra) que apuntará al almacén.\n");
+                aux = aux.toUpperCase();
+                if(aux.length() != 1){
+                    JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                }else if((int)aux.charAt(0) - 65 < 0 || (int)aux.charAt(0) - 65 > grafito.getNumVertices() - x){
+                    JOptionPane.showMessageDialog(null,"Ese almacén no existe.");
+                }else{
+                    while(true){
+                        try{
+                            int km = Integer.parseInt(JOptionPane.showInputDialog(null, "Distancia entre los almacenes: "));
+                            if(km < 1){
+                                JOptionPane.showMessageDialog(null,"La distancia debe ser mayor a 0.");
+                            }else{
+                                grafito.insertarArista((int)aux.charAt(0) - 65, vertice, km);
+                                ola = 7;
+                                break;
+                            }
+                        }catch(Exception e){
+                            JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                        }
+                    }
+                }
+            }
+        }
+        if(out){
+            while(ola != 5){
+                String aux = JOptionPane.showInputDialog(null, "Inserta el almacén (solo la letra) a donde apuntará el almacén.\n");
+                aux = aux.toUpperCase();
+                if(aux.length() != 1){
+                    JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                }else if((int)aux.charAt(0) - 65 < 0 || (int)aux.charAt(0) - 65 > grafito.getNumVertices() - x){
+                    JOptionPane.showMessageDialog(null,"Ese almacén no existe.");
+                }else{
+                    while(true){
+                        try{
+                            int km = Integer.parseInt(JOptionPane.showInputDialog(null, "Distancia entre los almacenes: "));
+                            if(km < 1){
+                                JOptionPane.showMessageDialog(null,"La distancia debe ser mayor a 0.");
+                            }else{
+                                grafito.insertarArista(vertice, (int)aux.charAt(0) - 65, km);
+                                ola = 5;
+                                break;
+                            }
+                        }catch(Exception e){
+                            JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     /**
      * Creates new form Panel
      */
@@ -33,29 +108,77 @@ public class Panel extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        espacioTexto = new javax.swing.JLabel();
+        cargar = new javax.swing.JButton();
+        pedido = new javax.swing.JButton();
+        aggAlmacen = new javax.swing.JButton();
+        aggCamino = new javax.swing.JButton();
+        salir = new javax.swing.JButton();
+        print = new javax.swing.JButton();
+        pantalla = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cargar.setText("Cargar");
+        cargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                cargarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, -1, -1));
-        jPanel1.add(espacioTexto, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 120, 60));
+        jPanel1.add(cargar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 110, 40));
+
+        pedido.setText("Hacer un pedido");
+        pedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pedidoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(pedido, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, 30));
+
+        aggAlmacen.setText("Agregar un nuevo almacén");
+        aggAlmacen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aggAlmacenActionPerformed(evt);
+            }
+        });
+        jPanel1.add(aggAlmacen, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, 40));
+
+        aggCamino.setText("Agregar camino");
+        aggCamino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aggCaminoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(aggCamino, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 170, -1, 30));
+
+        salir.setBackground(new java.awt.Color(255, 0, 0));
+        salir.setForeground(new java.awt.Color(255, 255, 255));
+        salir.setText("Salir");
+        salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 270, -1, -1));
+
+        print.setText("Mostrar almacenes y stock");
+        print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printActionPerformed(evt);
+            }
+        });
+        jPanel1.add(print, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 210, -1, 40));
+        jPanel1.add(pantalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 360, 100));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void cargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarActionPerformed
+        
         JFileChooser choos = new JFileChooser(new File("c:\\"));
         choos.setDialogTitle("Save a file");
         choos.showSaveDialog(null);
@@ -85,10 +208,20 @@ public class Panel extends javax.swing.JFrame {
                 }
             }
             
-            cadena2 = cadena2.substring(7, cadena2.length());
-            System.out.println(cadena2);
             String[] almacenes = cadena.split(";\n");
             int num = almacenes.length;
+            
+            for (int i = 0; i < num; i++) {
+                grafito.insertarVertice();
+            }
+            String[] aiuto = cadena2.split("\n");
+            for (int i = 0; i < aiuto.length; i++) {
+                String[] ayudita = aiuto[i].split(",");
+                int ascii = ayudita[0].charAt(0) - 65;
+                int ascii2 = ayudita[1].charAt(0) - 65;
+                grafito.insertarArista(ascii, ascii2, Integer.parseInt(ayudita[2]));
+            }
+            
             for (int i = 0; i < num; i++) {
                 String[] aux = almacenes[i].split(":\n");
                 String[] aiua = aux[1].split("\n");
@@ -101,15 +234,158 @@ public class Panel extends javax.swing.JFrame {
                 }
                 almacen.insertarFinal(aux[0], cositas);
             }
-            almacen.imprimirCosas();
             br.close();
             fr.close();
+            cargar.setVisible(false);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Hubo un error leyendo el archivo" + e);
+            JOptionPane.showMessageDialog(null,"Hubo un error leyendo el archivo. " + e);
+        }
+    }//GEN-LAST:event_cargarActionPerformed
+
+    private void pedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pedidoActionPerformed
+        pantalla.setText("Elegir a que almacen desea realizar el pedido (seleccionar el número)");
+        almacen.imprimirNombre();
+        int ans;
+        while(true){
+            try{
+                ans = Integer.parseInt(JOptionPane.showInputDialog(null, ""));
+                if(ans < 0 || ans > almacen.getSize()){
+                    JOptionPane.showMessageDialog(null, "Inserte una respuesta válida");
+                }else{
+                    break;
+                }
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Inserte una respuesta válida");
+            }
+        }
+        ListaStock listaAux = almacen.devolverLista(ans);
+        pantalla.setText("Elegir el producto que desea (seleccionar el número)");
+        listaAux.imprimir();
+        
+        while(true){
+            try{
+                ans = Integer.parseInt(JOptionPane.showInputDialog(null, ""));
+                if(ans < 0 || ans > listaAux.getSize()){
+                    JOptionPane.showMessageDialog(null, "Inserte una respuesta válida");
+                }else{
+                    NodoStock aux2 = listaAux.devolverNodo(ans);
+                    ans = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Cuántos desea? "));
+                    if(ans < 1 || ans > aux2.getCantidad()){
+                        JOptionPane.showMessageDialog(null, "Inserte una respuesta válida");
+                    }else{
+                        aux2.setCantidad(aux2.getCantidad() - ans);
+                        break;
+                    }
+                }
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Inserte una respuesta válida");
+            }
         }
         
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_pedidoActionPerformed
+
+    private void aggAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aggAlmacenActionPerformed
+        int hola = 1;
+        int ola = 0;
+        while(hola != 0){
+            ListaStock cositas = new ListaStock();
+            if(grafito.isFull()){
+                JOptionPane.showMessageDialog(null,"Ya no se pueden agregar más almacenes.");
+                hola = 0;
+            }else{
+                char letra = (char) (grafito.getNumVertices() + 65);
+                String name = "Almacen " + letra;
+                grafito.insertarVertice();
+                while(ola != 2){
+                    String articulo = JOptionPane.showInputDialog(null, "Nombre del artículo que desea agregar al almacén: ");
+                    try{
+                        int cant = Integer.parseInt(JOptionPane.showInputDialog(null, "Cantidad del artículo: "));                     
+                        if(cant < 1){
+                            JOptionPane.showMessageDialog(null,"Debes tener al menos uno disponible.");
+                        }else{
+                            cositas.insertarFinal(articulo, cant);
+                            OUTER:
+                            while (true) {
+                                try {
+                                    ola = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Quiere agregar otro producto al almacén?\n1. Sí\n2.No\n"));
+                                    switch (ola) {
+                                        case 2:
+                                            almacen.insertarFinal(name, cositas);
+                                            break OUTER;
+                                        case 1:
+                                            break OUTER;
+                                        default:
+                                            JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                                            break;
+                                    }
+                                }catch(Exception e){
+                                    JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                                }
+                            }
+                        }
+                    }catch(Exception e){
+                        JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                    }
+                }
+                this.insertarCaminos(true, true, grafito.getNumVertices() - 1);
+                hola = 0;
+            
+            }
+        }
+    }//GEN-LAST:event_aggAlmacenActionPerformed
+
+    private void aggCaminoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aggCaminoActionPerformed
+        while(true){
+            try{
+                int resp = Integer.parseInt(JOptionPane.showInputDialog(null, "¿Desea hacer un camino de entrada o salida?\n1.Entrada (A<-B)\n2.Salida (A->B)"));
+                switch (resp) {
+                    case 1:
+                        while(true){
+                            String aux = JOptionPane.showInputDialog(null, "Inserta el almacén (solo la letra) por donde entrará un nuevo camino.\n");
+                            aux = aux.toUpperCase();
+                            if(aux.length() != 1){
+                                JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                            }else if((int)aux.charAt(0) - 65 < 0 || (int)aux.charAt(0) - 65 > grafito.getNumVertices() - 1){
+                                JOptionPane.showMessageDialog(null,"Ese almacén no existe.");
+                            }else{
+                                this.insertarCaminos(true, false, (int)aux.charAt(0) - 65);
+                                break;
+                            }
+                        }
+                        break;
+                    case 2:
+                        while(true){
+                            String aux = JOptionPane.showInputDialog(null, "Inserta el almacén (solo la letra) que apuntará a otro almacén.\n");
+                            aux = aux.toUpperCase();
+                            if(aux.length() != 1){
+                                JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                            }else if((int)aux.charAt(0) - 65 < 0 || (int)aux.charAt(0) - 65 > grafito.getNumVertices() - 1){
+                                JOptionPane.showMessageDialog(null,"Ese almacén no existe.");
+                            }else{
+                                this.insertarCaminos(false, true, (int)aux.charAt(0) - 65);
+                                break;
+                            }
+                        }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+                        break;
+                }
+                break;
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null,"Ingrese datos válidos.");
+            }
+        }
+    }//GEN-LAST:event_aggCaminoActionPerformed
+
+    private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
+        almacen.imprimirCosas();
+    }//GEN-LAST:event_printActionPerformed
+
+    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+        System.out.println("Sabemos que este proyecto es un desastre :( pero el próximo será bueno :)\nLos TQM (A,S,L)");
+        System.exit(0);
+    }//GEN-LAST:event_salirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,8 +423,13 @@ public class Panel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel espacioTexto;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton aggAlmacen;
+    private javax.swing.JButton aggCamino;
+    private javax.swing.JButton cargar;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel pantalla;
+    private javax.swing.JButton pedido;
+    private javax.swing.JButton print;
+    private javax.swing.JButton salir;
     // End of variables declaration//GEN-END:variables
 }

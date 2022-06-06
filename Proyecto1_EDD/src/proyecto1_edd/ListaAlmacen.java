@@ -38,6 +38,18 @@ public class ListaAlmacen {
         }
     }  
     
+    public ListaStock devolverLista(int ans){
+        if(ans != 1){
+            NodoAlmacen aux = first;
+            for (int i = 0; i < ans; i++) {
+                aux = aux.getSiguiente();
+            }
+            return aux.getCosas();
+        }else{
+            return first.getCosas();
+        }
+    }
+    
     public void imprimirCosas(){
         int k = 1;
         if(isVacio()){
@@ -46,9 +58,11 @@ public class ListaAlmacen {
             NodoAlmacen aux = first;
             System.out.print("\n");
             for(int i = 0; i < size; i++){
+                k = 1;
                 NodoStock aux2 = aux.getCosas().getFirst();
+                System.out.println((i+1) + ") " + aux.getNombre());
                 for (int j = 0; j < aux.getCosas().getSize(); j++) {
-                    System.out.println(k + ". " + aux2.getElement() + ": " + aux2.getCantidad());
+                    System.out.println((i+1) + "." + k + ") " + aux2.getElement() + ": " + aux2.getCantidad());
                     aux2 =aux2.getSiguiente();
                     k++;
                 }
